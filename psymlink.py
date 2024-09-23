@@ -16,7 +16,7 @@ def create_symlink(source, destination, base_dir):
         print(f"Destination {destination} already exists.")
         while True:
             user_input = input(
-                "Do you want to overwrite (o), skip (s), or backup (b)? "
+                f"Do you want to overwrite (o), skip (s), or backup (b) {destination}?"
             ).lower()
             if user_input == "o":
                 if os.path.isdir(destination) and not os.path.islink(destination):
@@ -43,7 +43,7 @@ def create_symlink(source, destination, base_dir):
 
 def create_file_symlink(source, destination):
     try:
-        print(f"Creating file symlink from {source} to {destination}")
+        print(f"Creating symlink from {source} to {destination}")
         os.symlink(source, destination)
     except OSError as e:
         print(f"Failed to create symlink: {e}")
@@ -59,10 +59,10 @@ def create_directory_symlink(source, destination):
             )
             os.symlink(source, destination, target_is_directory=True)
         else:
-            print(f"Creating directory symlink from {source} to {destination}")
+            print(f"Creating symlink from {source} to {destination}")
             os.symlink(source, destination)
     except OSError as e:
-        print(f"Failed to create directory symlink: {e}")
+        print(f"Failed to create symlink: {e}")
 
 
 def process_symlinks(file_mappings, base_dir):
@@ -74,7 +74,7 @@ def process_symlinks(file_mappings, base_dir):
 
 def prompt_create_map_py():
     """Prompt user to create map.py with an example."""
-    print("\nError: Could not find or import 'map.py'.")
+    print("\nError: Could not find 'map.py' or illegal format found.")
     print(
         "Please create a 'map.py' file in the same directory with the following format:"
     )
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         if isinstance(map.file_name, dict):
             process_symlinks(map.file_name, base_dir)
         else:
-            print("Error: 'map.file_name' is not in the expected format.")
+            prompt_create_map_py()
 
     except ImportError:
         prompt_create_map_py()
